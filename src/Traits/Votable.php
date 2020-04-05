@@ -50,14 +50,15 @@ trait Votable
     {
         return $this->vote('down');
     }
-    
+
     /**
      * create a vote for this object.
      *
      * @param string $type -> 'up' or 'down'
      * @return Vote $vote
      */
-    public function vote($type) {
+    public function vote($type)
+    {
 
         $user = auth()->user();
 
@@ -70,7 +71,7 @@ trait Votable
         }
 
         $this->unVote(); // remove any previous votes
-        
+
         $multiplier = $type == 'up' ? 1 : -1;
 
         // create downvote
@@ -87,7 +88,8 @@ trait Votable
         return $vote;
     }
 
-    public function unVote() {
+    public function unVote()
+    {
         Vote::where([
             'user_id' => auth()->id(),
             'voted_id' => $this->id,
@@ -110,7 +112,7 @@ trait Votable
             'voted_id' => $this->id,
             'voted_type' => __CLASS__,
             'user_id' => auth()->id()
-        ])->where('value','<',0)->exists();
+        ])->where('value', '<', 0)->exists();
     }
 
     public function hasUpVoted()
@@ -119,7 +121,7 @@ trait Votable
             'voted_id' => $this->id,
             'voted_type' => __CLASS__,
             'user_id' => auth()->id()
-        ])->where('value','>',0)->exists();
+        ])->where('value', '>', 0)->exists();
     }
 
 
@@ -133,7 +135,8 @@ trait Votable
      * @param User $user the user casting the vote
      * @return bool
      */
-    public function canVote($user) {
+    public function canVote($user)
+    {
         if ($this->user_id == $user->id) {
             return false;
         } else if ($user->voteWeight() == 0) {
