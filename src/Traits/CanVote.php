@@ -54,7 +54,7 @@ trait CanVote
     public function makeVoter($weight = null)
     {
         if (!$this->isVoter()) {
-            $weight = $weight ? $weight : config('vote.default_weight');
+            $weight = $weight!==null ? $weight : config('vote.default_weight');
             return Voter::create(['user_id' => $this->id, 'weight' => $weight]);
         } else {
             return null;
