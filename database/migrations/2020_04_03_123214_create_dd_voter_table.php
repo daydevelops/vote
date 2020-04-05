@@ -14,7 +14,7 @@ class CreateDDVoterTable extends Migration
     public function up()
     {
         Schema::create('dd_voter', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->integer('weight');
             $table->timestamps();
