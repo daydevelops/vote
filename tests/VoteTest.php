@@ -169,27 +169,24 @@ class VoteTest extends TestCase
     }
 
     /** @test */
-    public function a_users_downvote_is_deleted_if_upvoted()
+    public function a_users_previous_vote_is_deleted_if_voted_again()
     {
         $this->signIn(); // as a second user
         $this->assertEquals(0, $this->comment->score);
-        $this->comment->downVote();
-        $this->assertEquals(-1, $this->comment->score);
-        $this->comment->upVote();
-        $this->assertEquals(1, $this->comment->score);
-        $this->assertCount(1, $this->comment->votes);
-    }
-
-    /** @test */
-    public function a_users_upvote_is_deleted_if_downvoted()
-    {
-        $this->signIn(); // as a second user
-        $this->assertEquals(0, $this->comment->score);
-        $this->comment->upVote();
-        $this->assertEquals(1, $this->comment->score);
-        $this->comment->downVote();
-        $this->assertEquals(-1, $this->comment->score);
-        $this->assertCount(1, $this->comment->votes);
+        $vote1 = $this->comment->downVote();
+        $this->assertDatabaseHas('dd_votes', ['id'=>$vote1->id]);
+        $vote2 = $this->comment->downVote();
+        $this->assertDatabaseHas('dd_votes', ['id'=>$vote2->id]);
+        $this->assertDatabaseMissing('dd_votes', ['id'=>$vote1->id]);
+        $vote3 = $this->comment->upVote();
+        $this->assertDatabaseHas('dd_votes', ['id'=>$vote3->id]);
+        $this->assertDatabaseMissing('dd_votes', ['id'=>$vote2->id]);
+        $vote4 = $this->comment->upVote();
+        $this->assertDatabaseHas('dd_votes', ['id'=>$vote4->id]);
+        $this->assertDatabaseMissing('dd_votes', ['id'=>$vote3->id]);
+        $vote5 = $this->comment->downVote();
+        $this->assertDatabaseHas('dd_votes', ['id'=>$vote5->id]);
+        $this->assertDatabaseMissing('dd_votes', ['id'=>$vote4->id]);
     }
 
     /** @test */

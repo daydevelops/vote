@@ -57,17 +57,11 @@ trait Votable
             $user->makeVoter();
         }
 
-        if (!$this->canVote('up',$user)) {
+        if (!$this->canVote($user)) {
             return false;
         }
 
-        if ($this->hasDownVoted()) {
-            Vote::where([
-                'user_id' => $user->id,
-                'voted_id' => $this->id,
-                'voted_type' => __CLASS__
-            ])->delete();
-        }
+        $this->unVote(); // remove any previous votes
 
         // create upvote
         $vote = Vote::create([
@@ -100,17 +94,12 @@ trait Votable
             $user->makeVoter();
         }
 
-        if (!$this->canVote('down',$user)) {
+        if (!$this->canVote($user)) {
             return false;
         }
 
-        if ($this->hasUpVoted()) {
-            Vote::where([
-                'user_id' => $user->id,
-                'voted_id' => $this->id,
-                'voted_type' => __CLASS__
-            ])->delete();
-        }
+        $this->unVote(); // remove any previous votes
+        
         // create downvote
         $vote = Vote::create([
             'user_id' => $user->id,
@@ -167,20 +156,14 @@ trait Votable
      * The user is not permitted to cast the intended vote if:
      *  - they own the votable object
      *  - their vote weight is zero
-     *  - they have already casted a vote of the same type
      *
-     * @param string $type the type of vote -> 'up' or 'down'
      * @param User $user the user casting the vote
      * @return bool
      */
-    public function canVote($type,$user) {
+    public function canVote($user) {
         if ($this->user_id == $user->id) {
             return false;
         } else if ($user->voteWeight() == 0) {
-            return false;
-        } else if ($type == 'up' && $this->hasUpVoted()) {
-            return false;
-        } else if ($type == 'down' && $this->hasDownVoted()) {
             return false;
         }
         return true;
