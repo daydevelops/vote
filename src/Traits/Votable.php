@@ -74,7 +74,7 @@ trait Votable
 
         $multiplier = $type == 'up' ? 1 : -1;
 
-        // create downvote
+        // create vote
         $vote = Vote::create([
             'user_id' => $user->id,
             'voted_id' => $this->id,
