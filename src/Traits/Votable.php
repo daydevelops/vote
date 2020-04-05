@@ -41,52 +41,23 @@ trait Votable
         return isset($this->user_id) ? $this->user_id : null;
     }
 
-    /**
-     * create an upvote for this object.
-     * 
-     * If the current voter casting the vote has already downvoted this object,
-     * their downvote will be destroyed and replaced with an upvote.
-     *
-     * @return Vote $vote
-     */
     public function upVote()
     {
-        $user = auth()->user();
-
-        if (!$user->isVoter()) {
-            $user->makeVoter();
-        }
-
-        if (!$this->canVote($user)) {
-            return false;
-        }
-
-        $this->unVote(); // remove any previous votes
-
-        // create upvote
-        $vote = Vote::create([
-            'user_id' => $user->id,
-            'voted_id' => $this->id,
-            'voted_type' => __CLASS__,
-            'votable_user_id' => $this->getUserID(),
-            'value' => $user->voteWeight()
-        ]);
-
-        event(new ItemUpVoted($vote));
-
-        return $vote;
+        return $this->vote('up');
     }
 
-    /**
-     * create a downvote for this object.
-     * 
-     * If the current voter casting the vote has already upvoted this object,
-     * their upvote will be destroyed and replaced with a downvote.
-     *
-     * @return Vote $vote
-     */
     public function downVote()
     {
+        return $this->vote('down');
+    }
+    
+    /**
+     * create a vote for this object.
+     *
+     * @param string $type -> 'up' or 'down'
+     * @return Vote $vote
+     */
+    public function vote($type) {
 
         $user = auth()->user();
 
@@ -100,16 +71,18 @@ trait Votable
 
         $this->unVote(); // remove any previous votes
         
+        $multiplier = $type == 'up' ? 1 : -1;
+
         // create downvote
         $vote = Vote::create([
             'user_id' => $user->id,
             'voted_id' => $this->id,
             'voted_type' => __CLASS__,
             'votable_user_id' => $this->getUserID(),
-            'value' => -1 * $user->voteWeight()
+            'value' => $multiplier * $user->voteWeight()
         ]);
 
-        event(new ItemDownVoted($vote));
+        $type == 'up' ? event(new ItemUpVoted($vote)) : event(new ItemDownVoted($vote));
 
         return $vote;
     }
