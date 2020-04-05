@@ -238,4 +238,16 @@ class VoteTest extends TestCase
             return $event->vote->id === $vote->id;
         });
     }
+    
+    /** @test */
+    public function a_vote_has_a_value_equal_to_the_voters_vote_weight()
+    {
+        $this->signIn();
+        auth()->user()->addVoteWeight(4);
+        $this->comment->upVote();
+        $this->assertEquals(5, $this->comment->score);
+        $this->comment->downVote();
+        $this->assertEquals(-5, $this->comment->score);
+    }
+    
 }

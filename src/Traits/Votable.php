@@ -65,8 +65,7 @@ trait Votable
             Vote::where([
                 'user_id' => $user->id,
                 'voted_id' => $this->id,
-                'voted_type' => __CLASS__,
-                'value' => -1
+                'voted_type' => __CLASS__
             ])->delete();
         }
 
@@ -76,7 +75,7 @@ trait Votable
             'voted_id' => $this->id,
             'voted_type' => __CLASS__,
             'votable_user_id' => $this->getUserID(),
-            'value' => 1
+            'value' => $user->voteWeight()
         ]);
 
         event(new ItemUpVoted($vote));
@@ -109,8 +108,7 @@ trait Votable
             Vote::where([
                 'user_id' => $user->id,
                 'voted_id' => $this->id,
-                'voted_type' => __CLASS__,
-                'value' => 1
+                'voted_type' => __CLASS__
             ])->delete();
         }
         // create downvote
@@ -119,7 +117,7 @@ trait Votable
             'voted_id' => $this->id,
             'voted_type' => __CLASS__,
             'votable_user_id' => $this->getUserID(),
-            'value' => -1
+            'value' => -1 * $user->voteWeight()
         ]);
 
         event(new ItemDownVoted($vote));
@@ -141,9 +139,8 @@ trait Votable
         return Vote::where([
             'voted_id' => $this->id,
             'voted_type' => __CLASS__,
-            'user_id' => auth()->id(),
-            'value' => -1
-        ])->exists();
+            'user_id' => auth()->id()
+        ])->where('value','<',0)->exists();
     }
 
     public function hasUpVoted()
@@ -151,8 +148,7 @@ trait Votable
         return Vote::where([
             'voted_id' => $this->id,
             'voted_type' => __CLASS__,
-            'user_id' => auth()->id(),
-            'value' => 1
-        ])->exists();
+            'user_id' => auth()->id()
+        ])->where('value','>',0)->exists();
     }
 }

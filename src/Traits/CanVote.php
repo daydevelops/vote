@@ -89,7 +89,7 @@ trait CanVote
             $weight = max(0, $voter->weight + $change); // set a minimum of zero
             $voter->update(['weight' => $weight]);
         } else {
-            $this->makeVoter($change);
+            $this->makeVoter($change + config('vote.default_weight'));
         }
 
         $voter = $this->getVoter();
