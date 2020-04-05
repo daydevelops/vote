@@ -151,4 +151,14 @@ class CanVoteTest extends TestCase
             return $event->voter->id === $voter->id;
         });
     }
+
+    /** @test */
+    public function no_vote_is_cast_if_the_users_vote_weight_is_zero()
+    {
+        $this->signIn();
+        auth()->user()->addVoteWeight(-1); // resulting in zero
+        $this->comment->upVote();
+        $this->assertCount(0, Vote::all());
+    }
+    
 }
