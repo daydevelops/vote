@@ -14,7 +14,7 @@ class CreateDDVotesTable extends Migration
     public function up()
     {
         Schema::create('dd_votes', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->unsignedInteger('voted_id');
             $table->string('voted_type');
             $table->integer('value');

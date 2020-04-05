@@ -14,7 +14,7 @@ class CreateDDCommentTable extends Migration
     public function up()
     {
         Schema::create('dd_comment', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->timestamps();
         });

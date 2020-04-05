@@ -14,7 +14,7 @@ class CreateDDUserTable extends Migration
     public function up()
     {
         Schema::create('dd_user', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->timestamps();
         });
     }
