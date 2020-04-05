@@ -125,6 +125,14 @@ trait Votable
         return $vote;
     }
 
+    public function unVote() {
+        Vote::where([
+            'user_id' => auth()->id(),
+            'voted_id' => $this->id,
+            'voted_type' => __CLASS__
+        ])->delete();
+    }
+
     public function hasVoted()
     {
         return Vote::where([

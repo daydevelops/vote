@@ -249,5 +249,15 @@ class VoteTest extends TestCase
         $this->comment->downVote();
         $this->assertEquals(-5, $this->comment->score);
     }
+
+    /** @test */
+    public function an_item_can_be_unvoted()
+    {
+        $this->signIn();
+        $this->comment->upVote();
+        $this->comment->unVote();
+        $this->assertCount(0, Vote::all());
+    }
+    
     
 }
