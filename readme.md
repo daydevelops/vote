@@ -28,13 +28,14 @@ Via Composer
 ``` bash
 $ composer require daydevelops/vote
 $ php artisan vendor:publish
+$ php artisan migrate
 ```
 
 ## Usage
 
 ### Apply the Votable Trait
 
-Suppose we have a blog and users can create comments. If we want to allow users to upvote and downvote comments, we simply add the votable trait.
+Suppose we have a blog and users can create comments. If we want to allow users to upvote and downvote comments, we simply add the Votable trait.
 
 ``` php
 ...
@@ -132,12 +133,12 @@ $this->getVoter(); // returns an instance of Daydevelops\Vote\Models\Voter
 
 *Make a Voter Record for this user*
 ``` 
-$this->makeVoter($change); // optional signed int $change is added to the default voter weight upon creation 
+$this->makeVoter($change); // optional signed int $change is added to the default voter weight (see config/vote.php) upon creation 
 ```
 
 *Change the Weight of the Users FUTURE Votes*
 ``` 
-$this->addWeight($change); // signed int $change is added to the users current vote weight
+$this->addWeight($change); // signed int $change is added to the users current vote weight. Voter is created if it does not yet exist
 ```
 
 *Get the Users Score Calculated from Votes Casted by other Users*
@@ -147,9 +148,11 @@ $this->votable_score;
 
 ## Events
 
-*Daydevelops\Vote\Events\ItemUpVoted* -> Fired when a votable object is upvoted
-*Daydevelops\Vote\Events\ItemDownVoted* -> Fired when a votable object is udownvoted
-*Daydevelops\Vote\Events\VoterWeightChanged* -> Fired when a voters vote weight is updated
+**Daydevelops\Vote\Events\ItemUpVoted** -> Fired when a votable object is upvoted
+
+**Daydevelops\Vote\Events\ItemDownVoted** -> Fired when a votable object is udownvoted
+
+**Daydevelops\Vote\Events\VoterWeightChanged** -> Fired when a voters vote weight is updated
 
 ## Tests
 
