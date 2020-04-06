@@ -3,7 +3,6 @@
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Build Status][ico-travis]][link-travis]
-[![StyleCI][ico-styleci]][link-styleci]
 
 This package gives your laravel project the ability to create and manage an upvote/downvote system for user created content. This project was inspired by Reddit karma.
 
@@ -69,79 +68,79 @@ class User extends Model
 
 ### Available Methods/Properties on the Votable Object
 
-*Authenticated User Casts a Vote*
+**Authenticated User Casts a Vote**
 ``` 
 $this->vote($type); // $type should be "up" or "down" 
 ```
 
-*Authenticated User Casts an Upvote*
+**Authenticated User Casts an Upvote**
 ``` 
 $this->upVote(); // alias of $this->vote('up'); 
 ```
 
-*Authenticated User Casts a Downvote*
+**Authenticated User Casts a Downvote**
 ``` 
 $this->downVote(); // alias of $this->vote('down'); 
 ```
 
-*Authenticated User Removes a Vote*
+**Authenticated User Removes a Vote**
 ``` 
 $this->unVote(); 
 ```
 
-*Has the Authenticated User Voted on this Object?*
+**Has the Authenticated User Voted on this Object?**
 ``` 
 $this->hasVoted(); 
 ```
 
-*Has the Authenticated User Upvoted this Object?*
+**Has the Authenticated User Upvoted this Object?**
 ``` 
 $this->hasUpVoted(); 
 ```
 
-*Has the Authenticated User Downvoted this Object?*
+**Has the Authenticated User Downvoted this Object?**
 ``` 
 $this->hasDownVoted(); 
 ```
 
-*Can the Authenticated User Vote on this Object?*
+**Can the Authenticated User Vote on this Object?**
 ``` 
 $this->canVote(); 
 ```
 
-*Get a Collection of all the Votes on this Object*
+**Get a Collection of all the Votes on this Object**
 ``` 
 $this->votes(); // hasMany relationship
 ```
 
-*Get the Total Score of all Votes Casted on this Object*
+**Get the Total Score of all Votes Casted on this Object**
 ``` 
 $this->score; 
 ```
 
 ### Available Methods/Properties on the Votable Object
 
-*Does this User have a Voter Record?*
+**Does this User have a Voter Record?**
 ``` 
 $this->isVoter(); 
 ```
 
-*Get the Voter Object for this User*
+**Get the Voter Object for this User**
 ``` 
 $this->getVoter(); // returns an instance of Daydevelops\Vote\Models\Voter
 ```
 
-*Make a Voter Record for this user*
+**Make a Voter Record for this user**
 ``` 
 $this->makeVoter($change); // optional signed int $change is added to the default voter weight (see config/vote.php) upon creation 
 ```
 
-*Change the Weight of the Users FUTURE Votes*
+**Change the Weight of the Users FUTURE Votes**
 ``` 
 $this->addWeight($change); // signed int $change is added to the users current vote weight. Voter is created if it does not yet exist
 ```
 
-*Get the Users Score Calculated from Votes Casted by other Users*
+**Get the Users Score Calculated from Votes Casted by other Users**
 ``` 
 $this->votable_score; 
 ```
@@ -176,12 +175,10 @@ MIT. Please see the [license file](license.md) for more information.
 
 [ico-version]: https://img.shields.io/packagist/v/daydevelops/vote.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/daydevelops/vote.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/daydevelops/vote/master.svg?style=flat-square
-[ico-styleci]: https://styleci.io/repos/12345678/shield
+[ico-travis]: https://travis-ci.org/daydevelops/vote.svg?branch=master?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/daydevelops/vote
 [link-downloads]: https://packagist.org/packages/daydevelops/vote
 [link-travis]: https://travis-ci.org/daydevelops/vote
-[link-styleci]: https://styleci.io/repos/12345678
 [link-author]: https://github.com/daydevelops
 [link-contributors]: ../../contributors
