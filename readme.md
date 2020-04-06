@@ -1,8 +1,8 @@
 # Laravel 7 Vote Package
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Total Downloads][ico-downloads]][link-downloads]
 [![Build Status](https://travis-ci.org/daydevelops/vote.svg?branch=master)](https://travis-ci.org/daydevelops/vote)
+[![Total Downloads](https://poser.pugx.org/daydevelops/vote/downloads)](https://packagist.org/packages/daydevelops/vote)
+[![License](https://poser.pugx.org/daydevelops/vote/license)](https://packagist.org/packages/daydevelops/vote)
 
 This package gives your laravel project the ability to create and manage an upvote/downvote system for user created content. This project was inspired by Reddit karma.
 
@@ -173,10 +173,5 @@ If you discover any security related issues, please email adamday@daydevelops.co
 
 MIT. Please see the [license file](license.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/daydevelops/vote.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/daydevelops/vote.svg?style=flat-square
-
-[link-packagist]: https://packagist.org/packages/daydevelops/vote
-[link-downloads]: https://packagist.org/packages/daydevelops/vote
 [link-author]: https://github.com/daydevelops
 [link-contributors]: ../../contributors
