@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDDVoterTable extends Migration
+class CreateDDVotersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDDVoterTable extends Migration
      */
     public function up()
     {
-        Schema::create('dd_voter', function (Blueprint $table) {
+        Schema::create('dd_voters', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->integer('weight');

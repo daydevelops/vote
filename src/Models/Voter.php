@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Voter extends Model
 {
 
-    protected $table = "dd_voter";
+    protected $table = "dd_voters";
 
     protected $fillable = ['user_id', 'weight'];
 }
