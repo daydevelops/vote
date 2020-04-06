@@ -1,11 +1,25 @@
-# Vote
+# Laravel 7 Vote Package
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Build Status][ico-travis]][link-travis]
 [![StyleCI][ico-styleci]][link-styleci]
 
-This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
+This package gives your laravel project the ability to create and manage an upvote/downvote system for user created content. This project was inspired by Reddit karma.
+
+## Main Features in this Package
+
+This package will provide you with 2 table migrations which will create a votes table (dd_votes) and a voter table (dd_voters). 
+
+You will also be given access to two traits:
+
+*Votable* -> Adds upvoting and downvoting functionality to a votable object such as a blog post, comment, photos, or anything else with a user_id representing an owner.
+
+*CanVote* -> To be applied to your User model. Adds additional functionality to your user which lets them manage their ability to vote, their voter weight, and votable score (calculated from votes others have casted on their votable objects).
+
+You can also access the two models Vote and Voter.
+
+A config file *vote.php* will be published to your config directory.
 
 ## Installation
 
@@ -18,15 +32,128 @@ $ php artisan vendor:publish
 
 ## Usage
 
-## Change log
+### Apply the Votable Trait
 
-Please see the [changelog](changelog.md) for more information on what has changed recently.
+Suppose we have a blog and users can create comments. If we want to allow users to upvote and downvote comments, we simply add the votable trait.
 
-## Testing
+``` php
+...
+use Daydevelops\Vote\Traits\Votable;
 
-``` bash
-$ composer test
+class Comment extends Model
+{
+    use Votable;
+
+    ...
+
+}
 ```
+
+### Apply the CanVote Trait
+
+The CanVote trait should be applied to your User model.
+
+``` php
+...
+use Daydevelops\Vote\Traits\CanVote;
+
+class User extends Model
+{
+    use CanVote;
+
+    ...
+
+}
+```
+
+### Available Methods/Properties on the Votable Object
+
+*Authenticated User Casts a Vote*
+``` 
+$this->vote($type); // $type should be "up" or "down" 
+```
+
+*Authenticated User Casts an Upvote*
+``` 
+$this->upVote(); // alias of $this->vote('up'); 
+```
+
+*Authenticated User Casts a Downvote*
+``` 
+$this->downVote(); // alias of $this->vote('down'); 
+```
+
+*Authenticated User Removes a Vote*
+``` 
+$this->unVote(); 
+```
+
+*Has the Authenticated User Voted on this Object?*
+``` 
+$this->hasVoted(); 
+```
+
+*Has the Authenticated User Upvoted this Object?*
+``` 
+$this->hasUpVoted(); 
+```
+
+*Has the Authenticated User Downvoted this Object?*
+``` 
+$this->hasDownVoted(); 
+```
+
+*Can the Authenticated User Vote on this Object?*
+``` 
+$this->canVote(); 
+```
+
+*Get a Collection of all the Votes on this Object*
+``` 
+$this->votes(); // hasMany relationship
+```
+
+*Get the Total Score of all Votes Casted on this Object*
+``` 
+$this->score; 
+```
+
+### Available Methods/Properties on the Votable Object
+
+*Does this User have a Voter Record?*
+``` 
+$this->isVoter(); 
+```
+
+*Get the Voter Object for this User*
+``` 
+$this->getVoter(); // returns an instance of Daydevelops\Vote\Models\Voter
+```
+
+*Make a Voter Record for this user*
+``` 
+$this->makeVoter($change); // optional signed int $change is added to the default voter weight upon creation 
+```
+
+*Change the Weight of the Users FUTURE Votes*
+``` 
+$this->addWeight($change); // signed int $change is added to the users current vote weight
+```
+
+*Get the Users Score Calculated from Votes Casted by other Users*
+``` 
+$this->votable_score; 
+```
+
+## Events
+
+*Daydevelops\Vote\Events\ItemUpVoted* -> Fired when a votable object is upvoted
+*Daydevelops\Vote\Events\ItemDownVoted* -> Fired when a votable object is udownvoted
+*Daydevelops\Vote\Events\VoterWeightChanged* -> Fired when a voters vote weight is updated
+
+## Tests
+
+For further clarification on any of the features of this package, take a look at the tests or reach out to the maintainer of the package.
 
 ## Contributing
 
