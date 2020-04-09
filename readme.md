@@ -171,7 +171,7 @@ If you discover any security related issues, please email adamday@daydevelops.co
 
 ## License
 
-MIT. Please see the [license file](license.md) for more information.
+MIT. Please see the [license file](LICENSE) for more information.
 
 [link-author]: https://github.com/daydevelops
 [link-contributors]: ../../contributors
