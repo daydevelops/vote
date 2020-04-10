@@ -28,6 +28,6 @@ class CreateDDVotersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('voter');
+        Schema::dropIfExists('dd_voters');
     }
 }
