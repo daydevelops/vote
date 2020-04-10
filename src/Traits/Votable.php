@@ -72,6 +72,17 @@ trait Votable
 
         $this->unVote(); // remove any previous votes
 
+        switch ($type) {
+            case 'up':
+                $multiplier = 1;
+                break;
+            case 'down':
+                $multiplier = -1;
+                break;
+            default:
+                return false;
+        }
+
         $multiplier = $type == 'up' ? 1 : -1;
 
         // create vote
