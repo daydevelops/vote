@@ -16,9 +16,8 @@ class VoteTest extends TestCase
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->withFactories(__DIR__ . '/database/factories');
-
-        $this->user = factory("Daydevelops\Vote\Models\User")->create();
-        $this->comment = factory("Daydevelops\Vote\Models\Comment")->create([
+        $this->user = factory("Daydevelops\Vote\Tests\Models\User")->create();
+        $this->comment = factory("Daydevelops\Vote\Tests\Models\Comment")->create([
             'user_id' => $this->user->id
         ]);
 
@@ -49,7 +48,7 @@ class VoteTest extends TestCase
 
     protected function signIn($user = null)
     {
-        $user = $user ?: factory('Daydevelops\Vote\Models\User')->create();
+        $user = $user ?: factory('Daydevelops\Vote\Tests\Models\User')->create();
         $this->be($user);
         return $this;
     }
@@ -61,10 +60,10 @@ class VoteTest extends TestCase
 
     public function vote($val, $id, $user_id = null)
     {
-        factory("Daydevelops\Vote\Models\Vote")->create([
+        $v = factory("Daydevelops\Vote\Models\Vote")->create([
             'user_id' => $user_id ? $user_id : auth()->id(),
             'voted_id' => $id,
-            'voted_type' => "Daydevelops\Vote\Models\Comment",
+            'voted_type' => "Daydevelops\Vote\Tests\Models\Comment",
             'value' => $val
         ]);
     }
@@ -116,12 +115,12 @@ class VoteTest extends TestCase
         $this->assertEquals(0, $this->comment->score);
         factory("Daydevelops\Vote\Models\Vote", 10)->create([
             'voted_id' => $this->comment->id,
-            'voted_type' => "Daydevelops\Vote\Models\Comment",
+            'voted_type' => "Daydevelops\Vote\Tests\Models\Comment",
             'value' => 1
         ]);
         factory("Daydevelops\Vote\Models\Vote", 40)->create([
             'voted_id' => $this->comment->id,
-            'voted_type' => "Daydevelops\Vote\Models\Comment",
+            'voted_type' => "Daydevelops\Vote\Tests\Models\Comment",
             'value' => -1
         ]);
         $this->assertEquals(-30, $this->comment->fresh()->score);
@@ -132,7 +131,7 @@ class VoteTest extends TestCase
     public function an_item_can_be_upvoted()
     {
         $this->signIn(); // as a second user
-        $comment2 = factory("Daydevelops\Vote\Models\Comment")->create();
+        $comment2 = factory("Daydevelops\Vote\Tests\Models\Comment")->create();
         $this->assertEquals(0, $this->comment->score);
         $this->comment->upVote();
         $this->assertEquals(1, $this->comment->score);
@@ -143,7 +142,7 @@ class VoteTest extends TestCase
     public function an_item_can_be_downvoted()
     {
         $this->signIn(); // as a second user
-        $comment2 = factory("Daydevelops\Vote\Models\Comment")->create();
+        $comment2 = factory("Daydevelops\Vote\Tests\Models\Comment")->create();
         $this->assertEquals(0, $this->comment->score);
         $this->comment->downVote();
         $this->assertEquals(-1, $this->comment->score);

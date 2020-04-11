@@ -1,6 +1,6 @@
 <?php
 
-namespace Daydevelops\Vote\Models;
+namespace Daydevelops\Vote\Tests\Models;
 
 use Daydevelops\Vote\Traits\CanVote;
 use Illuminate\Foundation\Auth\User as Authenticatable;

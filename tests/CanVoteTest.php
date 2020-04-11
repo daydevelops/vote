@@ -18,8 +18,8 @@ class CanVoteTest extends TestCase
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->withFactories(__DIR__ . '/database/factories');
 
-        $this->user = factory("Daydevelops\Vote\Models\User")->create();
-        $this->comment = factory("Daydevelops\Vote\Models\Comment")->create([
+        $this->user = factory("Daydevelops\Vote\Tests\Models\User")->create();
+        $this->comment = factory("Daydevelops\Vote\Tests\Models\Comment")->create([
             'user_id' => $this->user->id
         ]);
         Event::fake();
@@ -49,7 +49,7 @@ class CanVoteTest extends TestCase
 
     protected function signIn($user = null)
     {
-        $user = $user ?: factory('Daydevelops\Vote\Models\User')->create();
+        $user = $user ?: factory('Daydevelops\Vote\Tests\Models\User')->create();
         $this->be($user);
         return $this;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Daydevelops\Vote\Models;
+namespace Daydevelops\Vote\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Daydevelops\Vote\Traits\Votable;
