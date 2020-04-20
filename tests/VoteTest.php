@@ -7,6 +7,7 @@ use Daydevelops\Vote\Models\Vote;
 use Illuminate\Support\Facades\Event;
 use Daydevelops\Vote\Events\ItemUpVoted;
 use Daydevelops\Vote\Events\ItemDownVoted;
+use Illuminate\Support\Facades\Config;
 
 class VoteTest extends TestCase
 {
@@ -152,6 +153,7 @@ class VoteTest extends TestCase
     /** @test */
     public function an_item_cannot_be_upvoted_by_its_owner()
     {
+        Config::set('vote.canvote_rules.can_vote_owned_item',false);
         $this->signIn($this->user); // as a second user
         $this->assertEquals(0, $this->comment->score);
         $this->comment->upVote();
@@ -161,10 +163,31 @@ class VoteTest extends TestCase
     /** @test */
     public function an_item_cannot_be_downvoted_by_its_owner()
     {
+        Config::set('vote.canvote_rules.can_vote_owned_item',false);
         $this->signIn($this->user); // as a second user
         $this->assertEquals(0, $this->comment->score);
         $this->comment->downVote();
         $this->assertEquals(0, $this->comment->score);
+    }
+
+    /** @test */
+    public function an_item_can_be_upvoted_by_its_owner_if_vote_config_allows()
+    {
+        Config::set('vote.canvote_rules.can_vote_owned_item',true);
+        $this->signIn($this->user); // as a second user
+        $this->assertEquals(0, $this->comment->score);
+        $this->comment->upVote();
+        $this->assertEquals(1, $this->comment->score);
+    }
+
+    /** @test */
+    public function an_item_can_be_downvoted_by_its_owner_if_vote_config_allows()
+    {
+        Config::set('vote.canvote_rules.can_vote_owned_item',true);
+        $this->signIn($this->user); // as a second user
+        $this->assertEquals(0, $this->comment->score);
+        $this->comment->downVote();
+        $this->assertEquals(-1, $this->comment->score);
     }
 
     /** @test */

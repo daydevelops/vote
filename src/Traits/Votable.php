@@ -148,7 +148,7 @@ trait Votable
      */
     public function canVote($user)
     {
-        if ($this->user_id == $user->id) {
+        if ( !config('vote.canvote_rules.can_vote_owned_item') && $this->user_id == $user->id) {
             return false;
         } else if ($user->voteWeight() == 0) {
             return false;
