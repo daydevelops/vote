@@ -8,6 +8,7 @@ use Daydevelops\Vote\Models\Voter;
 use PHPUnit\Framework\TestFailure;
 use Illuminate\Support\Facades\Event;
 use Daydevelops\Vote\Events\VoterWeightChanged;
+use Illuminate\Support\Facades\Config;
 
 class CanVoteTest extends TestCase
 {
@@ -23,6 +24,9 @@ class CanVoteTest extends TestCase
             'user_id' => $this->user->id
         ]);
         Event::fake();
+
+        Config::set('vote.allow_weight_changes',true);
+        Config::set('vote.default_weight',1);
     }
 
     /**
