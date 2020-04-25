@@ -113,7 +113,7 @@ $this->votes(); // hasMany relationship
 $this->score; 
 ```
 
-### Available Methods/Properties on the Votable Object
+### Available Methods/Properties on the CanVote (User) Object
 
 **Does this User have a Voter Record?**
 ``` 
