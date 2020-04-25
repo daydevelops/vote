@@ -262,7 +262,8 @@ class VoteTest extends TestCase
     public function a_vote_has_a_value_equal_to_the_voters_vote_weight()
     {
         $this->signIn();
-        auth()->user()->addVoteWeight(4);
+        $voter = auth()->user()->makeVoter();
+        $voter->addVoteWeight(4);
         $this->comment->upVote();
         $this->assertEquals(5, $this->comment->score);
         $this->comment->downVote();

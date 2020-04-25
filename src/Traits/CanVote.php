@@ -4,10 +4,10 @@ namespace Daydevelops\Vote\Traits;
 
 use Daydevelops\Vote\Models\Vote;
 use Daydevelops\Vote\Models\Voter;
-use Daydevelops\Vote\Events\VoterWeightChanged;
 
 trait CanVote
 {
+
     /**
      * add the votable_score attribute to the user
      *
@@ -30,9 +30,9 @@ trait CanVote
         return Vote::where(['votable_user_id' => $this->id])->sum('value');
     }
 
-    protected function getVoter()
+    public function voter()
     {
-        return Voter::where(['user_id' => $this->id])->first();
+        return $this->hasOne(Voter::class);
     }
 
     /**
@@ -42,7 +42,7 @@ trait CanVote
      */
     public function isVoter()
     {
-        return !!$this->getVoter();
+        return $this->voter()->exists();
     }
 
     /**
@@ -59,41 +59,5 @@ trait CanVote
         } else {
             return null;
         }
-    }
-
-    public function voteWeight()
-    {
-        if ($this->isVoter()) {
-            return Voter::where(['user_id' => $this->id])->first()->weight;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * update the users vote weight by adding a positive or negative change
-     *
-     * @param int $change
-     * @return Voter $voter
-     */
-    public function addVoteWeight($change)
-    {
-        $voter = $this->getVoter();
-
-        if (!config('vote.allow_weight_changes')) {
-            return $voter;
-        }
-
-        // update voter weight, or make a new voter if none exists
-        if (!!$voter) {
-            $weight = max(0, $voter->weight + $change); // set a minimum of zero
-            $voter->update(['weight' => $weight]);
-        } else {
-            $this->makeVoter($change + config('vote.default_weight'));
-        }
-
-        $voter = $this->getVoter();
-        event(new VoterWeightChanged($voter));
-        return $voter;
     }
 }

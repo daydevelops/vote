@@ -63,7 +63,7 @@ class CanVoteTest extends TestCase
     {
         $this->assertFalse($this->user->isVoter());
         Voter::create(['user_id' => $this->user->id, 'weight' => 1]);
-        $this->assertTrue($this->user->isVoter());
+        $this->assertTrue($this->user->fresh()->isVoter());
     }
 
 
@@ -82,15 +82,6 @@ class CanVoteTest extends TestCase
     }
 
     /** @test */
-    public function a_voter_is_created_when_updating_the_weight_of_a_non_voter()
-    {
-        $this->signIn();
-        $this->assertCount(0, Voter::where(['user_id' => $this->user->id])->get());
-        $this->user->addVoteWeight(10);
-        $this->assertCount(1, Voter::where(['user_id' => $this->user->id])->get());
-    }
-
-    /** @test */
     public function a_user_only_has_one_voter()
     {
         $this->assertCount(0, Voter::where(['user_id' => $this->user->id])->get());
@@ -103,36 +94,35 @@ class CanVoteTest extends TestCase
     /** @test */
     public function a_user_knows_its_vote_weight()
     {
-        $this->assertNull($this->user->voteWeight());
-        Voter::create(['user_id' => $this->user->id, 'weight' => 1]);
-        $this->assertEquals(1, $this->user->voteWeight());
+        Voter::create(['user_id' => $this->user->id, 'weight' => 10]);
+        $this->assertEquals(10, $this->user->voter->weight);
     }
 
     /** @test */
     public function a_users_voter_weight_can_increase()
     {
         Voter::create(['user_id' => $this->user->id, 'weight' => 1]);
-        $this->assertEquals(1, $this->user->voteWeight());
-        $this->user->addVoteWeight(3);
-        $this->assertEquals(4, $this->user->voteWeight());
+        $this->assertEquals(1, $this->user->voter->weight);
+        $this->user->voter->addVoteWeight(3);
+        $this->assertEquals(4, $this->user->voter->weight);
     }
 
     /** @test */
     public function a_users_voter_weight_can_decrease()
     {
         Voter::create(['user_id' => $this->user->id, 'weight' => 5]);
-        $this->assertEquals(5, $this->user->voteWeight());
-        $this->user->addVoteWeight(-3);
-        $this->assertEquals(2, $this->user->voteWeight());
+        $this->assertEquals(5, $this->user->voter->weight);
+        $this->user->voter->addVoteWeight(-3);
+        $this->assertEquals(2, $this->user->voter->weight);
     }
 
     /** @test */
     public function a_users_vote_weight_has_a_minimum_of_zero()
     {
         Voter::create(['user_id' => $this->user->id, 'weight' => 5]);
-        $this->assertEquals(5, $this->user->voteWeight());
-        $this->user->addVoteWeight(-8);
-        $this->assertEquals(0, $this->user->voteWeight());
+        $this->assertEquals(5, $this->user->voter->weight);
+        $this->user->voter->addVoteWeight(-8);
+        $this->assertEquals(0, $this->user->voter->weight);
     }
 
     /** @test */
@@ -150,7 +140,8 @@ class CanVoteTest extends TestCase
     /** @test */
     public function an_event_is_triggered_for_a_change_in_vote_weight()
     {
-        $voter = $this->user->addVoteWeight(2);
+        $voter = $this->user->makeVoter();
+        $voter->addVoteWeight(2);
         Event::assertDispatched(VoterWeightChanged::class, function ($event) use ($voter) {
             return $event->voter->id === $voter->id;
         });
@@ -160,7 +151,8 @@ class CanVoteTest extends TestCase
     public function no_vote_is_cast_if_the_users_vote_weight_is_zero()
     {
         $this->signIn();
-        auth()->user()->addVoteWeight(-1); // resulting in zero
+        $voter = auth()->user()->makeVoter();
+        $voter->addVoteWeight(-1); // resulting in zero
         $this->comment->upVote();
         $this->assertCount(0, Vote::all());
     }
