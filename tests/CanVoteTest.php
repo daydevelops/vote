@@ -27,6 +27,7 @@ class CanVoteTest extends TestCase
 
         Config::set('vote.allow_weight_changes',true);
         Config::set('vote.default_weight',1);
+        Config::set('vote.canvote_rules.can_vote_if_banned',false);
     }
 
     /**
@@ -164,5 +165,34 @@ class CanVoteTest extends TestCase
         $this->comment->upVote();
         $this->assertCount(0, Vote::all());
     }
+
+    /** @test */
+    public function a_user_knows_if_it_is_banned()
+    {
+        $this->assertFalse($this->user->isBanned());
+        $this->user->makeVoter();
+        Voter::where(['user_id'=>$this->user->id])->update(['is_banned' => 1]);
+        $this->assertTrue($this->user->isBanned());
+    }
+    
+
+    /** @test */
+    public function a_voter_can_be_banned_from_voting()
+    {
+        
+    }
+    
+    /** @test */
+    public function a_user_can_be_unbanned_from_voting()
+    {
+        
+    }
+    
+    /** @test */
+    public function a_banned_user_cannot_cast_votes()
+    {
+        
+    }
+    
     
 }

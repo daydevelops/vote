@@ -10,6 +10,8 @@ return [
     // rules for the Votable canVote method
     "canvote_rules" => [
         // can the user vote on a voteable object that they own?
-        'can_vote_owned_item' =>false,
+        'can_vote_owned_item' => false,
+        'can_vote_if_banned' => false,
     ],
+
 ];

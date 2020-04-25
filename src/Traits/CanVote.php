@@ -96,4 +96,21 @@ trait CanVote
         event(new VoterWeightChanged($voter));
         return $voter;
     }
+    
+    /**
+     * Is this user banned from voting?
+     *
+     * @return bool
+     */
+    public function isBanned() {
+        if ($this->isVoter()) {
+            return !! Voter::where(['user_id' => $this->id])->first()->is_banned;
+        } else {
+            return false;
+        }
+    }
+
+    public function ban() {
+        
+    }
 }
