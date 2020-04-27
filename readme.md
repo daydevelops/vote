@@ -14,7 +14,7 @@ You will also be given access to two traits:
 
 *Votable* -> Adds upvoting and downvoting functionality to a votable object such as a blog post, comment, photos, or anything else with a user_id representing an owner.
 
-*CanVote* -> To be applied to your User model. Adds additional functionality to your user which lets them manage their ability to vote, their voter weight, and votable score (calculated from votes others have casted on their votable objects).
+*CanVote* -> To be applied to your User model. Adds additional functionality to your user which lets them manage their ability to vote and provides a votable score (calculated from votes others have casted on their votable objects).
 
 You can also access the two models Vote and Voter.
 
@@ -103,11 +103,6 @@ $this->hasUpVoted();
 $this->hasDownVoted(); 
 ```
 
-**Can the Authenticated User Vote on this Object?**
-``` 
-$this->canVote(); 
-```
-
 **Get a Collection of all the Votes on this Object**
 ``` 
 $this->votes(); // hasMany relationship
@@ -118,7 +113,7 @@ $this->votes(); // hasMany relationship
 $this->score; 
 ```
 
-### Available Methods/Properties on the Votable Object
+### Available Methods/Properties on the CanVote (User) Object
 
 **Does this User have a Voter Record?**
 ``` 
@@ -127,7 +122,7 @@ $this->isVoter();
 
 **Get the Voter Object for this User**
 ``` 
-$this->getVoter(); // returns an instance of Daydevelops\Vote\Models\Voter
+$this->voter; // returns hasOne relationship to Daydevelops\Vote\Models\Voter
 ```
 
 **Make a Voter Record for this user**
@@ -135,15 +130,24 @@ $this->getVoter(); // returns an instance of Daydevelops\Vote\Models\Voter
 $this->makeVoter($change); // optional signed int $change is added to the default voter weight (see config/vote.php) upon creation 
 ```
 
-**Change the Weight of the Users FUTURE Votes**
-``` 
-$this->addWeight($change); // signed int $change is added to the users current vote weight. Voter is created if it does not yet exist
-```
-
 **Get the Users Score Calculated from Votes Casted by other Users**
 ``` 
 $this->votable_score; 
 ```
+
+### Available Methods/Properties on the Voter Model
+where `$voter = $user->voter;`:
+
+**Change the Weight of the Voters FUTURE Votes**
+``` 
+$voter->addWeight($change); // signed int $change is added to the users current vote weight.
+```
+
+**Can the Voter Vote on an Object?**
+``` 
+$voter->canVote($votable_item); 
+```
+
 
 ## Events
 

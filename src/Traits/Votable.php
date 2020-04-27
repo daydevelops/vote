@@ -61,12 +61,13 @@ trait Votable
     {
 
         $user = auth()->user();
-
         if (!$user->isVoter()) {
-            $user->makeVoter();
+            $voter = $user->makeVoter();
+        } else {
+            $voter = $user->voter;
         }
 
-        if (!$this->canVote($user)) {
+        if (!$voter->canVote($this)) {
             return false;
         }
 
@@ -91,7 +92,7 @@ trait Votable
             'voted_id' => $this->id,
             'voted_type' => __CLASS__,
             'votable_user_id' => $this->getUserID(),
-            'value' => $multiplier * $user->voteWeight()
+            'value' => $multiplier * $voter->weight
         ]);
 
         $type == 'up' ? event(new ItemUpVoted($vote)) : event(new ItemDownVoted($vote));
@@ -133,26 +134,5 @@ trait Votable
             'voted_type' => __CLASS__,
             'user_id' => auth()->id()
         ])->where('value', '>', 0)->exists();
-    }
-
-
-    /**
-     * Can this user cast a vote?
-     * 
-     * The user is not permitted to cast the intended vote if:
-     *  - they own the votable object
-     *  - their vote weight is zero
-     *
-     * @param User $user the user casting the vote
-     * @return bool
-     */
-    public function canVote($user)
-    {
-        if ( !config('vote.canvote_rules.can_vote_owned_item') && $this->user_id == $user->id) {
-            return false;
-        } else if ($user->voteWeight() == 0) {
-            return false;
-        }
-        return true;
     }
 }
