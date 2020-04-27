@@ -10,7 +10,7 @@ class Voter extends Model
 
     protected $table = "dd_voters";
 
-    protected $fillable = ['user_id', 'weight'];
+    protected $fillable = ['user_id', 'weight', 'is_banned'];
 
 
     /**
@@ -44,7 +44,27 @@ class Voter extends Model
             return false;
         } else if ($this->weight == 0) {
             return false;
+        } else if (!config('vote.canvote_rules.can_vote_if_banned') && $this->isBanned()) {
+            return false;
         }
         return true;
     }
+    
+    /**
+     * Is this voter banned from voting?
+     *
+     * @return bool
+     */
+    public function isBanned() {
+        return !! $this->is_banned;
+    }
+
+    public function ban() {
+        $this->update(['is_banned' => 1]);
+    }
+
+    public function unban() {
+        $this->update(['is_banned' => 0]);
+    }
+    
 }

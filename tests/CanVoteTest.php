@@ -161,29 +161,43 @@ class CanVoteTest extends TestCase
     /** @test */
     public function a_user_knows_if_it_is_banned()
     {
-        $this->assertFalse($this->user->isBanned());
-        $this->user->makeVoter();
-        Voter::where(['user_id'=>$this->user->id])->update(['is_banned' => 1]);
-        $this->assertTrue($this->user->isBanned());
+        $voter = $this->user->makeVoter();
+        $this->assertFalse($voter->isBanned());
+        $voter->update(['is_banned' => 1]);
+        $this->assertTrue($voter->fresh()->isBanned());
     }
     
 
     /** @test */
     public function a_voter_can_be_banned_from_voting()
     {
-        
+        $voter = $this->user->makeVoter();
+        $this->assertFalse($voter->isBanned());
+        $voter->ban();
+        $this->assertTrue($voter->isBanned());
     }
     
     /** @test */
     public function a_user_can_be_unbanned_from_voting()
     {
         
+        $voter = $this->user->makeVoter();
+        $this->assertFalse($voter->isBanned());
+        $voter->ban();
+        $this->assertTrue($voter->isBanned());
+        $voter->unban();
+        $this->assertFalse($voter->isBanned());
     }
     
     /** @test */
     public function a_banned_user_cannot_cast_votes()
     {
-        
+        $this->signIn();
+        $voter = auth()->user()->makeVoter();
+        $voter->ban();
+        $this->assertCount(0, Vote::all());
+        $this->comment->upVote();
+        $this->assertCount(0, Vote::all());
     }
     
     
