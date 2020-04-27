@@ -17,7 +17,7 @@ class Voter extends Model
      * update the voters vote weight by adding a positive or negative change
      *
      * @param int $change
-     * @return Voter $voter
+     * @return bool
      */
     public function addVoteWeight($change)
     {

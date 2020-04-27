@@ -148,6 +148,17 @@ $voter->addWeight($change); // signed int $change is added to the users current 
 $voter->canVote($votable_item); 
 ```
 
+**Is the Voter Banned from Voting?**
+```
+$voter->isBanned();
+```
+
+**Ban or Unban the Voter**
+```
+$voter->ban();
+$voter->unban();
+```
+
 
 ## Events
 
